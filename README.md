@@ -40,3 +40,13 @@ Ainda não inclui recuperação de senha por e-mail, edição/exclusão de cadas
 ## Validação
 
 `python3 tests/smoke.py http://127.0.0.1:8080` executa o fluxo HTTP completo contra um banco de teste recém-instalado com `admin@example.test` e a senha fornecida via `TEST_ADMIN_PASSWORD`. Nunca execute em produção: o teste cria jogador, pelada e confirmação.
+
+## Instalação pelo navegador (sem Terminal)
+
+Use um banco dedicado vazio e HTTPS ativo. Faça backup antes de atualizar arquivos. Envie também `app/schema.php` e `public/install.php`, preservando o caminho privado do bootstrap se adaptou a pasta pública. Nunca substitua seu `config.php` pelo exemplo.
+
+1. No Gerenciador de Arquivos do cPanel, edite o `config.php` privado. Antes do `];`, adicione `'install_key' => 'SUA_CHAVE_ALEATORIA',`. Use o gerador de senhas do cPanel para gerar uma chave aleatória de 32 ou mais caracteres (letras e números). Não use o texto do exemplo como chave, nem envie a chave pelo chat.
+2. Abra `https://peladaceno.ideianinja.com.br/install.php`. Informe a chave, seu e-mail e uma nova senha administrativa (12 a 72 caracteres). Não reutilize a senha do banco ou do cPanel.
+3. Clique em instalar. Após a confirmação, remova `install.php` da pasta pública e remova `install_key` do `config.php`. Entre pelo endereço principal.
+
+O instalador só funciona com HTTPS e chave configurada; valida a chave e o formulário antes de criar tabelas. Bloqueia quando já existe administrador. Não serve para recuperar ou redefinir senha. Se aparecer “Banco indisponível”, confira host, nome completo do banco, usuário, senha e permissões no cPanel sem compartilhar esses valores.

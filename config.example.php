@@ -5,5 +5,7 @@ return [
     'user' => 'SEU_USUARIO',
     'password' => 'SUA_SENHA',
     'timezone' => 'America/Sao_Paulo',
+    // Opcional: gere no cPanel uma chave aleatória de 32+ caracteres. Remova após instalar.
+    'install_key' => '',
     'secure_cookie' => true,
 ];

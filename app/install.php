@@ -1,15 +1,9 @@
 <?php
 if (PHP_SAPI !== 'cli') { http_response_code(404); exit; }
 require __DIR__.'/bootstrap.php';
-$mysql=$db->getAttribute(PDO::ATTR_DRIVER_NAME)==='mysql';
-$id=$mysql?'INTEGER PRIMARY KEY AUTO_INCREMENT':'INTEGER PRIMARY KEY AUTOINCREMENT';
-$db->exec("CREATE TABLE IF NOT EXISTS admins (id $id, email VARCHAR(190) NOT NULL UNIQUE, password VARCHAR(255) NOT NULL)");
-$db->exec("CREATE TABLE IF NOT EXISTS players (id $id, name VARCHAR(100) NOT NULL, phone VARCHAR(30) NOT NULL DEFAULT '')");
-$db->exec("CREATE TABLE IF NOT EXISTS games (id $id, title VARCHAR(150) NOT NULL, location VARCHAR(150) NOT NULL, starts_at VARCHAR(19) NOT NULL, token VARCHAR(64) NOT NULL UNIQUE)");
-$db->exec('CREATE TABLE IF NOT EXISTS attendance (game_id INTEGER NOT NULL, player_id INTEGER NOT NULL, status VARCHAR(10) NOT NULL, PRIMARY KEY(game_id,player_id), FOREIGN KEY(game_id) REFERENCES games(id), FOREIGN KEY(player_id) REFERENCES players(id))');
-$db->exec('CREATE TABLE IF NOT EXISTS login_attempts (identity_hash VARCHAR(64) PRIMARY KEY, attempts INTEGER NOT NULL, last_attempt INTEGER NOT NULL)');
+require __DIR__.'/schema.php';
 if (query('SELECT COUNT(*) FROM admins')->fetchColumn()) exit("Instalação já realizada.\n");
 $email=getenv('ADMIN_EMAIL'); $password=getenv('ADMIN_PASSWORD');
 if (!filter_var($email,FILTER_VALIDATE_EMAIL) || strlen($password ?: '')<12) exit("Defina ADMIN_EMAIL e ADMIN_PASSWORD (mínimo 12 caracteres).\n");
-query('INSERT INTO admins(email,password) VALUES (?,?)',[strtolower($email),password_hash($password,PASSWORD_DEFAULT)]);
+query('INSERT INTO admins(id,email,password) VALUES (1,?,?)',[strtolower($email),password_hash($password,PASSWORD_DEFAULT)]);
 echo "Instalação concluída.\n";
